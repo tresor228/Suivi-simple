@@ -3,20 +3,97 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Suivi Colis - Espace Utilisateur</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <title>Tableau de Bord - Suivi Colis</title>
+  <link rel="stylesheet" href="css/user-style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Mes Colis</h1>
+    <header class="dashboard-header">
+      <h1>Mon Espace Colis</h1>
+      <div class="user-badge" id="userBadge"></div>
+    </header>
+    
+    <nav class="dashboard-nav">
+      <button class="nav-btn active" data-section="mesColis">📦 Mes Colis</button>
+      <button class="nav-btn" data-section="ajouterColis">➕ Ajouter Colis</button>
+      <button class="nav-btn" data-section="monProfil">👤 Mon Profil</button>
+    </nav>
 
-    <div>
-      <label for="clientId">Entrer votre identifiant :</label>
-      <input type="text" id="clientId" placeholder="Ex: ABC123" />
-      <button onclick="chargerColisUtilisateur()">Afficher mes colis</button>
-    </div>
+    <!-- Section Mes Colis -->
+    <section id="mesColis" class="dashboard-section">
+      <h2>Mes Colis en Cours</h2>
+      <div id="userColisList" class="colis-grid"></div>
+    </section>
 
-    <div id="userColisList"></div>
+    <!-- Section Ajouter Colis -->
+    <section id="ajouterColis" class="dashboard-section" style="display:none;">
+      <h2>Nouveau Colis</h2>
+      <form id="addPackageForm" class="colis-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="packageName">Nom du Colis*</label>
+            <input type="text" id="packageName" required>
+          </div>
+          <div class="form-group">
+            <label for="packageValue">Valeur (FCFA)*</label>
+            <input type="number" id="packageValue" min="1000" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="recipientName">Destinataire (facultatif)</label>
+          <input type="text" id="recipientName">
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Photo du Produit*</label>
+            <div class="file-upload-box" id="productImageUpload">
+              <input type="file" id="productImage" accept="image/*" required>
+              <span>+ Ajouter photo</span>
+              <div id="productImagePreview"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Preuve de Paiement*</label>
+            <div class="file-upload-box" id="paymentImageUpload">
+              <input type="file" id="paymentImage" accept="image/*" required>
+              <span>+ Ajouter photo</span>
+              <div id="paymentImagePreview"></div>
+            </div>
+          </div>
+        </div>
+        
+        <button type="submit" class="submit-btn">Enregistrer le Colis</button>
+        <div id="formMessage"></div>
+      </form>
+    </section>
+
+    <!-- Section Mon Profil -->
+    <section id="monProfil" class="dashboard-section" style="display:none;">
+      <div class="profile-header">
+        <h2>Mon Profil</h2>
+        <button class="logout-btn" onclick="deconnexion()">Déconnexion</button>
+      </div>
+      
+      <div class="profile-content">
+        <div class="personal-info">
+          <h3>📝 Informations Personnelles</h3>
+          <div id="personalInfo" class="info-grid"></div>
+        </div>
+        
+        <div class="profile-actions">
+          <button class="history-btn" onclick="afficherHistorique()">
+            🕒 Voir l'Historique
+          </button>
+        </div>
+        
+        <div id="historiqueSection" class="history-section">
+          <h3>📦 Historique des Colis (7+ jours)</h3>
+          <div id="historiqueList" class="colis-grid"></div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <script src="firebase-config.js"></script>

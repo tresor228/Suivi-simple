@@ -16,7 +16,12 @@ if (loginForm) {
     const password = document.getElementById('loginPassword').value;
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
-      window.location.href = 'user-dashboard.htm';
+      // Redirection selon l'utilisateur
+      if (email === 'bernardalade92@gmail.com' && password === 'Suivi2025') {
+        window.location.href = 'admin-dashboard.htm';
+      } else {
+        window.location.href = 'user-dashboard.htm';
+      }
     } catch (err) {
       document.getElementById('loginMessage').innerText = err.message;
     }
@@ -30,7 +35,16 @@ if (registerForm) {
     const email = document.getElementById('registerEmail').value;
     const password = document.getElementById('registerPassword').value;
     try {
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
+      const cred = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      // Générer un identifiant unique du type HD123
+      const randomId = 'HD' + Math.floor(100 + Math.random() * 900);
+      await firebase.firestore().collection('users').doc(cred.user.uid).set({
+        fullName: document.getElementById('fullName').value,
+        phone: document.getElementById('phone').value,
+        address: document.getElementById('address').value,
+        identifiant: randomId,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
       document.getElementById('loginMessage').innerText = 'Compte créé, vous pouvez vous connecter.';
       document.getElementById('formInscription').style.display = 'none';
     } catch (err) {
