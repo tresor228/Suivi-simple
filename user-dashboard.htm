@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Suivi Colis - Espace Utilisateur</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Mes Colis</h1>
+
+    <div>
+      <label for="clientId">Entrer votre identifiant :</label>
+      <input type="text" id="clientId" placeholder="Ex: ABC123" />
+      <button onclick="chargerColisUtilisateur()">Afficher mes colis</button>
+    </div>
+
+    <div id="userColisList"></div>
+  </div>
+
+  <script src="firebase-config.js"></script>
+  <script src="js/user.js"></script>
+</body>
+</html>

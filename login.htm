@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connexion - Suivi Colis</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Connexion</h1>
+    <form id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Mot de passe" required />
+      <button type="submit">Se connecter</button>
+    </form>
+    <button onclick="afficherFormInscription()">Créer un compte</button>
+    <button onclick="afficherFormReset()">Mot de passe oublié ?</button>
+    <div id="formInscription" style="display:none;">
+      <h2>Créer un compte</h2>
+      <form id="registerForm">
+        <input type="email" id="registerEmail" placeholder="Email" required />
+        <input type="password" id="registerPassword" placeholder="Mot de passe" required />
+        <button type="submit">S'inscrire</button>
+      </form>
+    </div>
+    <div id="formReset" style="display:none;">
+      <h2>Réinitialiser le mot de passe</h2>
+      <form id="resetForm">
+        <input type="email" id="resetEmail" placeholder="Email" required />
+        <button type="submit">Envoyer le lien</button>
+      </form>
+    </div>
+    <div id="loginMessage"></div>
+  </div>
+  <script src="firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

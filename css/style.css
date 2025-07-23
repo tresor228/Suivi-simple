@@ -1,0 +1,101 @@
+/* css/style.css */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: #f5f5f5;
+  }
+  
+  .container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    box-sizing: border-box;
+  }
+  
+  button {
+    width: 100%;
+    padding: 12px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+  }
+  
+  @media (max-width: 480px) {
+    .container {
+      margin: 20px;
+      padding: 20px;
+    }
+  }
+  
+  select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    box-sizing: border-box;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  #successMessage {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #d4edda;
+    color: #155724;
+    border-radius: 5px;
+  }
+  .colis-card {
+    background: #fff;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 6px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
+  }
+  
+  .colis-card img {
+    margin-top: 5px;
+    border-radius: 4px;
+  }
+  
+  .colis-card .actions button {
+    margin-right: 10px;
+    padding: 6px 12px;
+    border: none;
+    background-color: #1a73e8;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .colis-card .actions button:hover {
+    background-color: #1558b0;
+  }
+  input#recherche {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  #clientId {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+  }
+  
+  button {
+    margin-bottom: 20px;
+  }
+  

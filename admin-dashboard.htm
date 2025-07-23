@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Suivi de Colis</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Tableau de bord - Admin</h1>
+
+    <div id="colisList"></div><h2>Changer le statut par date</h2>
+    <label for="filterDate">Sélectionner la date :</label>
+    <input type="date" id="filterDate" />
+    <button onclick="filtrerColisParDate()">Afficher les colis reçus jusqu’à cette date</button>
+    
+    <div id="colisFiltres"></div>
+    <button onclick="changerStatutsGroupes()">Changer le statut des colis sélectionnés</button>
+    
+    <form id="colisForm">
+        <input type="text" id="clientId" placeholder="Identifiant client" required />
+        <input type="text" id="trackingNumber" placeholder="Numéro de suivi" required />
+        
+        <select id="transportType" required>
+          <option value="">Type de transport</option>
+          <option value="maritime">Maritime</option>
+          <option value="aérien">Aérien</option>
+        </select>
+      
+        <input type="date" id="arrivalDate" required />
+      
+        <label for="articleImage">Photo de l'article :</label>
+        <input type="file" id="articleImage" accept="image/*" capture="environment" required />
+      
+        <button type="submit">Ajouter le colis</button>
+      </form>      
+
+    <div id="successMessage" class="hidden">✅ Colis ajouté avec succès !</div>
+  </div>
+
+  <script src="firebase-config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

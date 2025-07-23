@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Historique des Colis</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Historique des Colis Livrés</h1>
+
+    <input type="text" id="recherche" placeholder="🔍 Rechercher par numéro de suivi..." oninput="filtrerHistorique()" />
+    <div id="historiqueList"></div>
+  </div>
+
+  <script src="firebase-config.js"></script>
+  <script src="js/historique.js"></script>
+</body>
+</html>
