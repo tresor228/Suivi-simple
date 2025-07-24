@@ -1,24 +1,346 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suivi de Colis - Inscription</title>
+  <title>TransitPro - Votre Partenaire Logistique de Confiance</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Créer un compte</h1>
-    <form id="signupForm">
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="password" id="password" placeholder="Mot de passe" required />
-      <button type="submit">S'inscrire</button>
-    </form>
-    <p>Déjà inscrit ? <a href="login.htm">Connexion</a></p>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">TransitPro</a>
+      
+      <div class="nav-links" id="navLinks">
+        <a href="#accueil" class="nav-link">Accueil</a>
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#apropos" class="nav-link">À propos</a>
+        <a href="#processus" class="nav-link">Processus</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+
+      <div class="auth-buttons">
+        <button class="btn btn-outline" onclick="openModal('login')">
+          Connexion
+        </button>
+        <button class="btn btn-primary" onclick="openModal('register')">
+          Inscription
+        </button>
+      </div>
+
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        ☰
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="accueil">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>Votre Partenaire Logistique de Confiance</h1>
+        <p>TransitPro vous accompagne dans tous vos besoins de transport et de logistique avec des solutions sur mesure, rapides et sécurisées.</p>
+        <div class="hero-buttons">
+          <a href="#services" class="btn btn-primary btn-hero">
+            🚀 Découvrir nos services
+          </a>
+          <a href="#contact" class="btn btn-outline btn-hero">
+            📞 Nous contacter
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=600&h=400&fit=crop" alt="Transport logistique" class="hero-image">
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Nos Services</h2>
+        <p class="section-subtitle">Des solutions complètes pour tous vos besoins logistiques</p>
+      </div>
+      
+      <div class="services-grid">
+        <div class="service-card">
+          <span class="service-icon">✈️</span>
+          <h3>Transport Aérien</h3>
+          <p>Livraisons rapides et sécurisées par voie aérienne pour vos colis urgents et documents importants.</p>
+        </div>
+        
+        <div class="service-card">
+          <span class="service-icon">🚢</span>
+          <h3>Transport Maritime</h3>
+          <p>Solutions économiques pour vos envois volumineux avec suivi complet de bout en bout.</p>
+        </div>
+        
+        <div class="service-card">
+          <span class="service-icon">📦</span>
+          <h3>Suivi de Colis</h3>
+          <p>Suivez vos colis en temps réel avec notre système de tracking avancé et notifications automatiques.</p>
+        </div>
+        
+        <div class="service-card">
+          <span class="service-icon">🛡️</span>
+          <h3>Assurance</h3>
+          <p>Protection complète de vos envois avec notre couverture d'assurance adaptée à vos besoins.</p>
+        </div>
+        
+        <div class="service-card">
+          <span class="service-icon">📋</span>
+          <h3>Déclaration Douanière</h3>
+          <p>Gestion complète des formalités douanières pour faciliter vos envois internationaux.</p>
+        </div>
+        
+        <div class="service-card">
+          <span class="service-icon">🏪</span>
+          <h3>Entreposage</h3>
+          <p>Solutions de stockage sécurisées avec gestion d'inventaire et préparation de commandes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- À propos -->
+  <section class="section section-alt" id="apropos">
+    <div class="container">
+      <div class="about-content">
+        <div class="about-text">
+          <h2>TransitPro, Votre Partenaire de Confiance</h2>
+          <p>Depuis plus de 15 ans, TransitPro s'impose comme le leader du transport et de la logistique au Togo et en Afrique de l'Ouest. Notre expertise et notre réseau international nous permettent d'offrir des solutions sur mesure à nos clients.</p>
+          <p>Nous mettons un point d'honneur à la qualité de service, la rapidité de livraison et la sécurité de vos envois. Notre équipe d'experts vous accompagne à chaque étape de votre projet logistique.</p>
+          
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-number">15+</span>
+              <span class="stat-label">Années d'expérience</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">5000+</span>
+              <span class="stat-label">Clients satisfaits</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">50+</span>
+              <span class="stat-label">Destinations</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">24/7</span>
+              <span class="stat-label">Support client</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="about-image">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop" alt="Équipe TransitPro">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Processus -->
+  <section class="section" id="processus">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Notre Processus</h2>
+        <p class="section-subtitle">Une méthode éprouvée pour garantir la réussite de vos envois</p>
+      </div>
+      
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="step-number">1</div>
+          <h3>Demande de Devis</h3>
+          <p>Contactez-nous pour obtenir un devis personnalisé en fonction de vos besoins spécifiques.</p>
+        </div>
+        
+        <div class="process-step">
+          <div class="step-number">2</div>
+          <h3>Collecte</h3>
+          <p>Nous récupérons vos colis à l'adresse de votre choix selon les horaires convenus.</p>
+        </div>
+        
+        <div class="process-step">
+          <div class="step-number">3</div>
+          <h3>Transport</h3>
+          <p>Vos envois sont acheminés par nos réseaux sécurisés avec suivi en temps réel.</p>
+        </div>
+        
+        <div class="process-step">
+          <div class="step-number">4</div>
+          <h3>Livraison</h3>
+          <p>Réception confirmée à destination avec signature et notification automatique.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section section-alt" id="contact">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Contactez-nous</h2>
+        <p class="section-subtitle">Notre équipe est à votre disposition pour répondre à vos questions</p>
+      </div>
+      
+      <div class="contact-content">
+        <div class="contact-info">
+          <h3>Nos Coordonnées</h3>
+          
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div>
+              <strong>Adresse</strong><br>
+              123 Avenue de la Paix, Lomé, Togo
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div>
+              <strong>Téléphone</strong><br>
+              +228 22 XX XX XX
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-icon">✉️</div>
+            <div>
+              <strong>Email</strong><br>
+              contact@transitpro.tg
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-icon">🕒</div>
+            <div>
+              <strong>Horaires</strong><br>
+              Lun-Ven: 8h-18h<br>Sam: 8h-12h
+            </div>
+          </div>
+        </div>
+        
+        <div class="tracking-section">
+          <h3>Suivi de Colis</h3>
+          <p>Entrez votre numéro de suivi pour connaître l'état de votre colis en temps réel.</p>
+          <form class="tracking-form">
+            <input type="text" class="tracking-input" placeholder="Numéro de suivi (ex: TP123456789)">
+            <button type="submit" class="btn btn-primary">
+              🔍 Suivre
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>TransitPro</h3>
+          <p>Votre partenaire logistique de confiance depuis 15 ans. Nous connectons le Togo au monde entier.</p>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Services</h3>
+          <a href="#services">Transport Aérien</a>
+          <a href="#services">Transport Maritime</a>
+          <a href="#services">Suivi de Colis</a>
+          <a href="#services">Assurance</a>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Entreprise</h3>
+          <a href="#apropos">À propos</a>
+          <a href="#contact">Contact</a>
+          <a href="#">Carrières</a>
+          <a href="#">Partenaires</a>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Support</h3>
+          <a href="#">Centre d'aide</a>
+          <a href="#">FAQ</a>
+          <a href="#">Conditions</a>
+          <a href="#">Confidentialité</a>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2025 TransitPro. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modals -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeModal('login')">&times;</button>
+      <div class="modal-header">
+        <h2 class="modal-title">Connexion</h2>
+        <p class="modal-subtitle">Accédez à votre espace client</p>
+      </div>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="loginPassword">Mot de passe</label>
+          <input type="password" id="loginPassword" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          Se connecter
+        </button>
+      </form>
+      
+      <div class="form-toggle">
+        <p>Pas encore de compte ? <a href="#" onclick="switchModal('login', 'register')">S'inscrire</a></p>
+      </div>
+    </div>
   </div>
 
-  <script src="firebase-config.js"></script>
-  <script src="js/auth.js"></script>
+  <div class="modal" id="registerModal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeModal('register')">&times;</button>
+      <div class="modal-header">
+        <h2 class="modal-title">Inscription</h2>
+        <p class="modal-subtitle">Créez votre compte TransitPro</p>
+      </div>
+      
+      <form id="registerForm">
+        <div class="form-group">
+          <label for="registerEmail">Email</label>
+          <input type="email" id="registerEmail" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="registerPassword">Mot de passe</label>
+          <input type="password" id="registerPassword" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="confirmPassword">Confirmer le mot de passe</label>
+          <input type="password" id="confirmPassword" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          S'inscrire
+        </button>
+      </form>
+      
+      <div class="form-toggle">
+        <p>Déjà inscrit ? <a href="#" onclick="switchModal('register', 'login')">Se connecter</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
 </body>
 </html>

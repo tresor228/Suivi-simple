@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscription - TransitPro</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a href="index.html" class="back-link">
+    ← Retour au site
+  </a>
+
+  <div class="container">
+    <div class="logo">TransitPro</div>
+    
+    <h1>Inscription</h1>
+    <p>Créez votre compte TransitPro</p>
+    
+    <form id="signupForm">
+      <input type="text" id="fullName" placeholder="Nom complet" required />
+      <input type="email" id="email" placeholder="Adresse email" required />
+      <input type="password" id="password" placeholder="Mot de passe" required />
+      <input type="password" id="confirmPassword" placeholder="Confirmer le mot de passe" required />
+      <button type="submit">✨ S'inscrire</button>
+    </form>
+    
+    <p>Déjà inscrit ? <a href="login.html">Se connecter</a></p>
+    
+    <div id="signupMessage"></div>
+  </div>
+
+  <script src="firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
