@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin - Suivi Colis</title>
-  <link rel="stylesheet" href="css/admin-style.css" />
+  <link rel="stylesheet" href="css/admin-style.css">
 </head>
 <body>
-  <div class="container admin-container">
+  <div class="container">
     <header class="admin-header">
       <h1>Tableau de Bord Admin</h1>
       <button id="logoutBtn" class="logout-btn">Déconnexion</button>
@@ -22,48 +22,69 @@
     <!-- Section Ajout de Colis -->
     <section id="ajouterColis" class="dashboard-section">
       <h2>Enregistrer un Nouveau Colis</h2>
+      
+      <!-- Statistiques rapides -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="totalPackages">0</div>
+          <div class="stat-label">Total Colis</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="pendingPackages">0</div>
+          <div class="stat-label">En Attente</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="shippingPackages">0</div>
+          <div class="stat-label">En Livraison</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="deliveredPackages">0</div>
+          <div class="stat-label">Livrés</div>
+        </div>
+      </div>
+
       <form id="colisForm" class="admin-form">
         <div class="form-row">
           <div class="form-group">
             <label for="recipientName">Nom Destinataire*</label>
-            <input type="text" id="recipientName" required>
+            <input type="text" id="recipientName" placeholder="Ex: Jean Dupont" required>
           </div>
           <div class="form-group">
             <label for="recipientPhone">Téléphone*</label>
-            <input type="tel" id="recipientPhone" required>
+            <input type="tel" id="recipientPhone" placeholder="Ex: +228 90 12 34 56" required>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="trackingNumber">Numéro de Suivi*</label>
-            <input type="text" id="trackingNumber" required>
+            <input type="text" id="trackingNumber" placeholder="Ex: TRK001234567" required>
           </div>
           <div class="form-group">
             <label for="transportType">Type Transport*</label>
             <select id="transportType" required>
-              <option value="">Choisir...</option>
-              <option value="aérien">Aérien</option>
-              <option value="maritime">Maritime</option>
+              <option value="">Choisir le type de transport...</option>
+              <option value="aérien">✈️ Aérien</option>
+              <option value="maritime">🚢 Maritime</option>
             </select>
           </div>
         </div>
 
         <div class="form-group">
           <label for="packageImage">Photo du Colis*</label>
-          <div class="file-upload-box">
+          <div class="file-upload-box" onclick="document.getElementById('packageImage').click()">
             <input type="file" id="packageImage" accept="image/*" required>
-            <span>+ Ajouter photo</span>
+            <span>Cliquez pour ajouter une photo du colis</span>
             <div id="packageImagePreview" class="image-preview"></div>
           </div>
         </div>
 
         <div class="form-group">
           <label for="packageNotes">Notes (facultatif)</label>
-          <textarea id="packageNotes" rows="2"></textarea>
+          <textarea id="packageNotes" placeholder="Ajoutez des notes sur le colis si nécessaire..."></textarea>
         </div>
 
-        <button type="submit" class="submit-btn">Enregistrer</button>
+        <button type="submit" class="submit-btn">Enregistrer le Colis</button>
         <div id="formMessage"></div>
       </form>
     </section>
@@ -73,22 +94,22 @@
       <div class="section-header">
         <h2>Gestion des Colis Actifs</h2>
         <div class="search-filter">
-          <input type="text" id="searchInput" placeholder="Rechercher...">
+          <input type="text" id="searchInput" placeholder="🔍 Rechercher par numéro ou nom...">
           <select id="statusFilter">
-            <option value="">Tous</option>
-            <option value="en_attente">En attente</option>
-            <option value="en_livraison">En livraison</option>
-            <option value="livre">Livré</option>
+            <option value="">Tous les statuts</option>
+            <option value="en_attente">🕒 En attente</option>
+            <option value="en_livraison">🚚 En livraison</option>
+            <option value="livre">✅ Livré</option>
           </select>
         </div>
       </div>
 
       <div class="batch-actions">
-        <div class="selected-count">0 sélectionnés</div>
+        <div class="selected-count">0 colis sélectionnés</div>
         <div class="action-buttons">
-          <button id="markShippingBtn" class="action-btn" disabled>Mettre en livraison</button>
-          <button id="markDeliveredBtn" class="action-btn" disabled>Marquer livré</button>
-          <button id="archiveBtn" class="action-btn" disabled>Archiver</button>
+          <button id="markShippingBtn" class="action-btn" disabled>🚚 Mettre en livraison</button>
+          <button id="markDeliveredBtn" class="action-btn" disabled>✅ Marquer livré</button>
+          <button id="archiveBtn" class="action-btn" disabled>📁 Archiver</button>
         </div>
       </div>
 
@@ -99,12 +120,27 @@
     <section id="historiqueColis" class="dashboard-section" style="display:none;">
       <div class="section-header">
         <h2>Historique des Colis</h2>
-        <input type="text" id="historySearch" placeholder="Rechercher...">
+        <div class="search-filter">
+          <input type="text" id="historySearch" placeholder="🔍 Rechercher dans l'historique...">
+          <select id="historyStatusFilter">
+            <option value="">Tous les statuts</option>
+            <option value="livre">✅ Livré</option>
+            <option value="archive">📁 Archivé</option>
+          </select>
+        </div>
       </div>
       <div id="historiqueList" class="colis-grid"></div>
     </section>
   </div>
 
+  <!-- Modal pour agrandir les images -->
+  <div id="imageModal" class="modal">
+    <div class="modal-content">
+      <img id="modalImage" alt="Image agrandie">
+    </div>
+  </div>
+
+  <script src = "js/auth.js"></script>
   <script src="firebase-config.js"></script>
   <script src="js/admin.js"></script>
 </body>

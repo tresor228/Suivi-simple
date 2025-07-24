@@ -4,13 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tableau de Bord - Suivi Colis</title>
-  <link rel="stylesheet" href="css/user-style.css" />
+  <link rel="stylesheet" href = "css/user-style.css">
 </head>
 <body>
   <div class="container">
     <header class="dashboard-header">
-      <h1>Mon Espace Colis</h1>
-      <div class="user-badge" id="userBadge"></div>
+      <h1>✨ Mon Espace Colis</h1>
+      <div class="user-badge" id="userBadge">
+        <span>utilisateur@example.com</span>
+        <img src="https://i.imgur.com/8Km9tLL.png" alt="Photo profil" class="user-avatar">
+      </div>
     </header>
     
     <nav class="dashboard-nav">
@@ -22,7 +25,12 @@
     <!-- Section Mes Colis -->
     <section id="mesColis" class="dashboard-section">
       <h2>Mes Colis en Cours</h2>
-      <div id="userColisList" class="colis-grid"></div>
+      <div id="userColisList" class="colis-grid">
+        <div class="empty-message">
+          <p>Aucun colis enregistré pour le moment</p>
+          <p style="font-size: 0.9rem; margin-top: 8px; opacity: 0.7;">Cliquez sur "Ajouter Colis" pour commencer</p>
+        </div>
+      </div>
     </section>
 
     <!-- Section Ajouter Colis -->
@@ -32,39 +40,39 @@
         <div class="form-row">
           <div class="form-group">
             <label for="packageName">Nom du Colis*</label>
-            <input type="text" id="packageName" required>
+            <input type="text" id="packageName" placeholder="Ex: iPhone 15 Pro" required>
           </div>
           <div class="form-group">
             <label for="packageValue">Valeur (FCFA)*</label>
-            <input type="number" id="packageValue" min="1000" required>
+            <input type="number" id="packageValue" min="1000" placeholder="Ex: 850000" required>
           </div>
         </div>
         
         <div class="form-group">
           <label for="recipientName">Destinataire (facultatif)</label>
-          <input type="text" id="recipientName">
+          <input type="text" id="recipientName" placeholder="Nom du destinataire">
         </div>
         
         <div class="form-row">
           <div class="form-group">
             <label>Photo du Produit*</label>
-            <div class="file-upload-box" id="productImageUpload">
+            <div class="file-upload-box" onclick="document.getElementById('productImage').click()">
               <input type="file" id="productImage" accept="image/*" required>
-              <span>+ Ajouter photo</span>
+              <span>Cliquez pour ajouter une photo</span>
               <div id="productImagePreview"></div>
             </div>
           </div>
           <div class="form-group">
             <label>Preuve de Paiement*</label>
-            <div class="file-upload-box" id="paymentImageUpload">
+            <div class="file-upload-box" onclick="document.getElementById('paymentImage').click()">
               <input type="file" id="paymentImage" accept="image/*" required>
-              <span>+ Ajouter photo</span>
+              <span>Cliquez pour ajouter une photo</span>
               <div id="paymentImagePreview"></div>
             </div>
           </div>
         </div>
         
-        <button type="submit" class="submit-btn">Enregistrer le Colis</button>
+        <button type="submit" class="submit-btn">✨ Enregistrer le Colis</button>
         <div id="formMessage"></div>
       </form>
     </section>
@@ -73,13 +81,17 @@
     <section id="monProfil" class="dashboard-section" style="display:none;">
       <div class="profile-header">
         <h2>Mon Profil</h2>
-        <button class="logout-btn" onclick="deconnexion()">Déconnexion</button>
+        <button class="logout-btn" onclick="deconnexion()">🚪 Déconnexion</button>
       </div>
       
       <div class="profile-content">
         <div class="personal-info">
           <h3>📝 Informations Personnelles</h3>
-          <div id="personalInfo" class="info-grid"></div>
+          <div id="personalInfo" class="info-grid">
+            <div class="empty-message">
+              <p>Informations de profil en cours de chargement...</p>
+            </div>
+          </div>
         </div>
         
         <div class="profile-actions">
@@ -90,13 +102,33 @@
         
         <div id="historiqueSection" class="history-section">
           <h3>📦 Historique des Colis (7+ jours)</h3>
-          <div id="historiqueList" class="colis-grid"></div>
+          <div id="historiqueList" class="colis-grid">
+            <div class="package-card history">
+              <div class="package-header">
+                <h3>iPad Pro 12.9"</h3>
+                <span class="status-badge livre">✅ Archivé</span>
+              </div>
+              <div class="package-details">
+                <div class="detail">
+                  <label>Livré le:</label>
+                  <span>10/07/2025</span>
+                </div>
+                <div class="detail">
+                  <label>Valeur:</label>
+                  <span>750 000 FCFA</span>
+                </div>
+              </div>
+              <div class="package-images">
+                <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400" alt="Photo du produit" class="package-image">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   </div>
-
+  <script src = "js/auth.js"></script>
   <script src="firebase-config.js"></script>
-  <script src="js/user.js"></script>
+  <script src = "js/user.js"></script>
 </body>
 </html>
