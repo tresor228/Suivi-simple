@@ -1,3 +1,5 @@
+import { auth, db } from '../firebase-config.js';
+
 function afficherFormInscription() {
   document.getElementById('formInscription').style.display = 'block';
   document.getElementById('formReset').style.display = 'none';
@@ -15,7 +17,7 @@ if (loginForm) {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
+      await auth.signInWithEmailAndPassword(email, password);
       // Redirection selon l'utilisateur
       if (email === 'bernardalade92@gmail.com' && password === 'Suivi2025') {
         window.location.href = 'admin-dashboard.htm';
@@ -35,15 +37,15 @@ if (registerForm) {
     const email = document.getElementById('registerEmail').value;
     const password = document.getElementById('registerPassword').value;
     try {
-      const cred = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      const cred = await auth.createUserWithEmailAndPassword(email, password);
       // Générer un identifiant unique du type HD123
       const randomId = 'HD' + Math.floor(100 + Math.random() * 900);
-      await firebase.firestore().collection('users').doc(cred.user.uid).set({
+      await db.collection('users').doc(cred.user.uid).set({
         fullName: document.getElementById('fullName').value,
         phone: document.getElementById('phone').value,
         address: document.getElementById('address').value,
         identifiant: randomId,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        createdAt: new Date().toISOString()
       });
       document.getElementById('loginMessage').innerText = 'Compte créé, vous pouvez vous connecter.';
       document.getElementById('formInscription').style.display = 'none';
@@ -59,7 +61,7 @@ if (resetForm) {
     e.preventDefault();
     const email = document.getElementById('resetEmail').value;
     try {
-      await firebase.auth().sendPasswordResetEmail(email);
+      await auth.sendPasswordResetEmail(email);
       document.getElementById('loginMessage').innerText = 'Lien envoyé, vérifiez votre boîte mail.';
       document.getElementById('formReset').style.display = 'none';
     } catch (err) {

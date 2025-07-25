@@ -1,7 +1,9 @@
+import { auth, db } from '../firebase-config.js';
+
 let listeComplete = [];
 
 async function chargerHistorique() {
-  const snapshot = await firebase.firestore()
+  const snapshot = await db
     .collection("historique_colis")
     .orderBy("archivedAt", "desc")
     .get();
@@ -44,11 +46,11 @@ function filtrerHistorique() {
 }
 
 window.onload = async function() {
-  firebase.auth().onAuthStateChanged(async function(user) {
+  auth.onAuthStateChanged(async function(user) {
     if (user) {
       // Utilisateur connecté, on charge ses colis historiques
       const userId = user.uid;
-      const snapshot = await firebase.firestore()
+      const snapshot = await db
         .collection("historique_colis")
         .where("userUid", "==", userId)
         .orderBy("archivedAt", "desc")
@@ -67,7 +69,7 @@ window.onload = async function() {
 };
 
 document.getElementById('logoutBtn')?.addEventListener('click', function() {
-  firebase.auth().signOut().then(() => {
+  auth.signOut().then(() => {
     window.location.href = 'login.htm';
   });
 });
@@ -77,12 +79,12 @@ async function archiverColis(id, data) {
     if (!confirmation) return;
   
     try {
-      await firebase.firestore().collection("historique_colis").doc(id).set({
+      await db.collection("historique_colis").doc(id).set({
         ...data,
         archivedAt: new Date().toISOString()
       });
   
-      await firebase.firestore().collection("colis").doc(id).delete();
+      await db.collection("colis").doc(id).delete();
       alert("✅ Colis archivé !");
       afficherListeColis();
     } catch (error) {
