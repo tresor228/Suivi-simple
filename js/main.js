@@ -80,18 +80,22 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
-      
       // Add loading state
       const submitBtn = loginForm.querySelector('button[type="submit"]');
       submitBtn.textContent = 'Connexion...';
       submitBtn.disabled = true;
-      
-      // Simulate login process
       setTimeout(() => {
-        showMessage('Connexion réussie ! Redirection...', 'success');
-        setTimeout(() => {
-          window.location.href = 'dashboard.html';
-        }, 1500);
+        if (email === 'bernardalade92@gmail.com' && password === 'Suivi2025') {
+          showMessage('Connexion admin réussie ! Redirection...', 'success');
+          setTimeout(() => {
+            window.location.href = 'admin-dashboard.htm';
+          }, 1500);
+        } else {
+          showMessage('Connexion réussie ! Redirection...', 'success');
+          setTimeout(() => {
+            window.location.href = 'user-dashboard.htm';
+          }, 1500);
+        }
       }, 2000);
     });
   }
@@ -104,23 +108,49 @@ document.addEventListener('DOMContentLoaded', () => {
       const email = document.getElementById('registerEmail').value;
       const password = document.getElementById('registerPassword').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
-      
+      const fullName = document.getElementById('registerFullName').value;
+      const phone = document.getElementById('registerPhone').value;
+      const address = document.getElementById('registerAddress').value;
       if (password !== confirmPassword) {
         showMessage('Les mots de passe ne correspondent pas', 'error');
         return;
       }
-      
+      if (!email || !password || !fullName || !phone || !address) {
+        showMessage('Veuillez remplir tous les champs', 'error');
+        return;
+      }
+      // Générer un identifiant unique de type HD123
+      const userId = 'HD' + Math.floor(100 + Math.random() * 900);
       // Add loading state
       const submitBtn = registerForm.querySelector('button[type="submit"]');
       submitBtn.textContent = 'Inscription...';
       submitBtn.disabled = true;
-      
-      // Simulate registration process
       setTimeout(() => {
-        showMessage('Inscription réussie ! Vous pouvez maintenant vous connecter.', 'success');
+        showMessage(`Inscription réussie ! Votre identifiant est ${userId}. Vous pouvez maintenant vous connecter.`, 'success');
         setTimeout(() => {
           switchModal('register', 'login');
-        }, 1500);
+        }, 2000);
+      }, 2000);
+    });
+  }
+
+  // Password reset form
+  const resetForm = document.getElementById('resetForm');
+  if (resetForm) {
+    resetForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('resetEmail').value;
+      if (!email) {
+        showMessage('Veuillez entrer votre email', 'error');
+        return;
+      }
+      const submitBtn = resetForm.querySelector('button[type="submit"]');
+      submitBtn.textContent = 'Envoi...';
+      submitBtn.disabled = true;
+      setTimeout(() => {
+        showMessage('Un lien de réinitialisation a été envoyé à votre adresse email.', 'success');
+        submitBtn.textContent = 'Envoyer';
+        submitBtn.disabled = false;
       }, 2000);
     });
   }

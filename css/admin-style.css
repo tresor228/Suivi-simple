@@ -70,7 +70,6 @@
     }
 
     .admin-header h1::before {
-      content: '👨‍💼';
       font-size: 2rem;
     }
 
@@ -89,9 +88,6 @@
       font-size: 1rem;
     }
 
-    .logout-btn::before {
-      content: '🚪';
-    }
 
     .logout-btn:hover {
       transform: translateY(-2px);
@@ -624,9 +620,6 @@
       gap: 8px;
     }
 
-    .submit-btn::before {
-      content: '💾';
-    }
 
     .submit-btn::after {
       content: '';
@@ -663,7 +656,6 @@
     }
 
     .empty::before {
-      content: '📦';
       font-size: 4rem;
       display: block;
       margin-bottom: 16px;

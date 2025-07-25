@@ -1,5 +1,3 @@
-import { auth, db } from '../firebase-config.js';
-
 // Configuration Firebase simulée (remplacez par votre vraie config)
     const firebaseConfig = {
       // Votre configuration Firebase ici

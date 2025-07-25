@@ -3,6 +3,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+// Supprimez cette ligne ou ajoutez l'import si vous voulez utiliser Analytics
+// import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyC8iVLLZOwCjxS_eAvtvWCDAdEjbSnDJVg",
@@ -18,4 +20,5 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
-const analytics = getAnalytics(app);
+// Supprimez cette ligne ou décommentez si vous voulez utiliser Analytics
+// export const analytics = getAnalytics(app);
