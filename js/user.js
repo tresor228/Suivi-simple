@@ -1,5 +1,3 @@
-import { auth, db } from '../firebase-config.js';
-
 // Simulation des fonctions JavaScript basiques
     document.addEventListener('DOMContentLoaded', function() {
       initNavigation();

@@ -116,7 +116,7 @@
       // Déconnexion simulée
       document.getElementById('logoutBtn').addEventListener('click', () => {
         if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-          alert('Déconnexion simulée - redirection vers la page de connexion');
+          window.location.href = 'login.htm';
         }
       });
     }

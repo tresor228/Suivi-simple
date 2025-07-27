@@ -316,20 +316,30 @@
       
       <form id="registerForm">
         <div class="form-group">
+          <label for="lastName">Nom</label>
+          <input type="text" id="lastName" placeholder="Votre nom" required />
+        </div>
+        <div class="form-group">
+          <label for="firstName">Prénom</label>
+          <input type="text" id="firstName" placeholder="Votre prénom" required />
+        </div>
+        <div class="form-group">
           <label for="registerEmail">Email</label>
           <input type="email" id="registerEmail" required>
         </div>
-        
+        <div class="form-group">
+          <label for="phone">Téléphone</label>
+          <input type="text" id="phone" placeholder="Votre téléphone (Ex: +228 XX XX XX XX)" required />
+        </div>
         <div class="form-group">
           <label for="registerPassword">Mot de passe</label>
           <input type="password" id="registerPassword" required>
         </div>
-        
         <div class="form-group">
           <label for="confirmPassword">Confirmer le mot de passe</label>
           <input type="password" id="confirmPassword" required>
         </div>
-        
+        <div id="loginMessage" style="color: red; margin-bottom: 10px;"></div>
         <button type="submit" class="btn btn-primary" style="width: 100%;">
           S'inscrire
         </button>

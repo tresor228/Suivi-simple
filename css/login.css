@@ -218,7 +218,6 @@ a:hover {
 }
 
 .logo::before {
-  content: '🚚';
   font-size: 2rem;
 }
 
