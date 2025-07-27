@@ -56,26 +56,42 @@ if (registerForm) {
     const password = document.getElementById('registerPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     
+    const messageElement = document.getElementById('loginMessage');
+    
     if (password !== confirmPassword) {
-      document.getElementById('loginMessage').innerText = 'Les mots de passe ne correspondent pas';
+      messageElement.innerText = 'Les mots de passe ne correspondent pas';
+      return;
+    }
+    
+    if (password.length < 6) {
+      messageElement.innerText = 'Le mot de passe doit contenir au moins 6 caractères';
       return;
     }
     
     try {
+      messageElement.innerText = 'Création du compte en cours...';
+      
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       // Générer un identifiant unique du type HD123
       const randomId = 'HD' + Math.floor(100 + Math.random() * 900);
       
       await setDoc(doc(db, 'users', cred.user.uid), {
         email: email,
+        fullName: 'Nouvel utilisateur',
+        phone: '',
+        address: '',
         identifiant: randomId,
         createdAt: new Date().toISOString()
       });
       
-      document.getElementById('loginMessage').innerText = 'Compte créé avec succès! Votre ID: ' + randomId + '. Vous pouvez vous connecter.';
+      messageElement.style.color = 'green';
+      messageElement.innerText = 'Compte créé avec succès! Votre ID: ' + randomId + '. Vous pouvez vous connecter.';
       document.getElementById('formInscription').style.display = 'none';
+      registerForm.reset();
     } catch (err) {
-      document.getElementById('loginMessage').innerText = 'Erreur inscription: ' + err.message;
+      messageElement.style.color = 'red';
+      messageElement.innerText = 'Erreur inscription: ' + err.message;
+      console.error('Erreur Firebase:', err);
     }
   };
 }
