@@ -96,6 +96,70 @@ if (registerForm) {
   };
 }
 
+// Inscription pour le formulaire du modal dans index.htm
+document.addEventListener('DOMContentLoaded', function() {
+  const modalRegisterForm = document.querySelector('#registerModal form');
+  if (modalRegisterForm) {
+    modalRegisterForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const lastName = document.getElementById('lastName').value;
+      const firstName = document.getElementById('firstName').value;
+      const email = document.getElementById('registerEmail').value;
+      const phone = document.getElementById('phone').value;  
+      const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      
+      const messageElement = document.getElementById('loginMessage');
+      
+      if (password !== confirmPassword) {
+        messageElement.innerText = 'Les mots de passe ne correspondent pas';
+        messageElement.style.color = 'red';
+        return;
+      }
+      
+      if (password.length < 6) {
+        messageElement.innerText = 'Le mot de passe doit contenir au moins 6 caractères';
+        messageElement.style.color = 'red';
+        return;
+      }
+      
+      try {
+        messageElement.innerText = 'Création du compte en cours...';
+        messageElement.style.color = 'blue';
+        
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        const randomId = 'HD' + Math.floor(100 + Math.random() * 900);
+        
+        await setDoc(doc(db, 'users', cred.user.uid), {
+          email: email,
+          fullName: `${firstName} ${lastName}`,
+          phone: phone,
+          address: '',
+          identifiant: randomId,
+          createdAt: new Date().toISOString()
+        });
+        
+        messageElement.style.color = 'green';
+        messageElement.innerText = 'Compte créé avec succès! Votre ID: ' + randomId + '. Vous pouvez vous connecter.';
+        modalRegisterForm.reset();
+        
+        setTimeout(() => {
+          const registerModal = document.getElementById('registerModal');
+          if (registerModal) {
+            registerModal.classList.remove('active');
+          }
+        }, 2000);
+        
+      } catch (err) {
+        messageElement.style.color = 'red';
+        messageElement.innerText = 'Erreur inscription: ' + err.message;
+        console.error('Erreur Firebase:', err);
+      }
+    });
+  }
+});
+
 // Mot de passe oublié
 const resetForm = document.getElementById('resetForm');
 if (resetForm) {

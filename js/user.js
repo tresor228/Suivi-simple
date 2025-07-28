@@ -1,5 +1,5 @@
 import { auth, db } from '../firebase-config.js';
-import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
 import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
 // Variables globales
@@ -54,7 +54,10 @@ function updateUserDisplay() {
   // Mettre à jour le badge utilisateur
   const userBadge = document.getElementById('userBadge');
   if (userBadge && userProfileData) {
-    userBadge.querySelector('span').textContent = userProfileData.email;
+    const emailSpan = userBadge.querySelector('span');
+    if (emailSpan) {
+      emailSpan.textContent = userProfileData.email;
+    }
   }
   
   // Mettre à jour les informations du profil
@@ -113,7 +116,7 @@ function deconnexion() {
     btn.textContent = '⏳ Déconnexion...';
     btn.disabled = true;
     
-    auth.signOut().then(() => {
+    signOut(auth).then(() => {
       window.location.href = 'login.htm';
     }).catch((error) => {
       console.error('Erreur de déconnexion:', error);
@@ -132,12 +135,8 @@ document.addEventListener('DOMContentLoaded', function() {
   initImageUploads();
   initPackageForm();
   
-  // Correction : afficher la section active au chargement
-  const activeBtn = document.querySelector('.nav-btn.active');
-  if (activeBtn) {
-    const sectionId = activeBtn.getAttribute('data-section');
-    showSection(sectionId);
-  }
+  // Afficher la première section par défaut
+  showSection('mesColis');
 });
 
 function initNavigation() {
@@ -146,15 +145,21 @@ function initNavigation() {
     button.addEventListener('click', function() {
       const sectionId = this.getAttribute('data-section');
       showSection(sectionId);
+      
+      // Mettre à jour les boutons actifs
+      navButtons.forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
     });
   });
 }
 
 function showSection(sectionId) {
-  // Masquer toutes les sections et afficher la bonne
+  // Masquer toutes les sections
   document.querySelectorAll('.dashboard-section').forEach(section => {
     section.style.display = 'none';
   });
+  
+  // Afficher la section demandée
   const targetSection = document.getElementById(sectionId);
   if (targetSection) {
     targetSection.style.display = 'block';
@@ -167,13 +172,6 @@ function showSection(sectionId) {
       targetSection.style.transform = 'translateY(0)';
     }, 50);
   }
-  // Mettre à jour les boutons actifs
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.getAttribute('data-section') === sectionId) {
-      btn.classList.add('active');
-    }
-  });
 }
 
 function initImageUploads() {
@@ -292,6 +290,13 @@ function addNewPackageToList() {
   // Retourner automatiquement à la section "Mes Colis"
   setTimeout(() => {
     showSection('mesColis');
+    // Mettre à jour le bouton actif
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.getAttribute('data-section') === 'mesColis') {
+        btn.classList.add('active');
+      }
+    });
   }, 1000);
 }
 
