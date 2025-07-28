@@ -5,14 +5,16 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/9.23.0/firebase
 import { getStorage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
 const firebaseConfig = {
-    apiKey: "VOTRE_API_KEY",
-    authDomain: "VOTRE_AUTH_DOMAIN",
-    projectId: "VOTRE_PROJECT_ID", 
-    storageBucket: "VOTRE_STORAGE_BUCKET",
-    messagingSenderId: "VOTRE_MESSAGING_SENDER_ID",
-    appId: "VOTRE_APP_ID",
-    measurementId: "VOTRE_MEASUREMENT_ID"
+
+  apiKey: "AIzaSyC8iVLLZOwCjxS_eAvtvWCDAdEjbSnDJVg",
+  authDomain: "suivi-mood.firebaseapp.com",
+  projectId: "suivi-mood",
+  storageBucket: "suivi-mood.firebasestorage.app",
+  messagingSenderId: "810367255230",
+  appId: "1:810367255230:web:ce0978cf9b068ed2d294ef",
+  measurementId: "G-27Z787N8ED"
 };
+
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
