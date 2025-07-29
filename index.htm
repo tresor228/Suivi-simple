@@ -284,21 +284,23 @@
         <p class="modal-subtitle">Accédez à votre espace client</p>
       </div>
       
-      <form id="loginForm">
+      <form id="modalLoginForm">
         <div class="form-group">
-          <label for="loginEmail">Email</label>
-          <input type="email" id="loginEmail" required>
+          <label for="modalLoginEmail">Email</label>
+          <input type="email" id="modalLoginEmail" required>
         </div>
         
         <div class="form-group">
-          <label for="loginPassword">Mot de passe</label>
-          <input type="password" id="loginPassword" required>
+          <label for="modalLoginPassword">Mot de passe</label>
+          <input type="password" id="modalLoginPassword" required>
         </div>
         
         <button type="submit" class="btn btn-primary" style="width: 100%;">
           Se connecter
         </button>
       </form>
+      
+      <div id="modalLoginMessage" class="form-message"></div>
       
       <div class="form-toggle">
         <p>Pas encore de compte ? <a href="#" onclick="switchModal('login', 'register')">S'inscrire</a></p>
@@ -314,36 +316,38 @@
         <p class="modal-subtitle">Créez votre compte TransitPro</p>
       </div>
       
-      <form id="registerForm">
+      <form id="modalRegisterForm">
         <div class="form-group">
-          <label for="lastName">Nom</label>
-          <input type="text" id="lastName" placeholder="Votre nom" required />
+          <label for="modalLastName">Nom</label>
+          <input type="text" id="modalLastName" placeholder="Votre nom" required />
         </div>
         <div class="form-group">
-          <label for="firstName">Prénom</label>
-          <input type="text" id="firstName" placeholder="Votre prénom" required />
+          <label for="modalFirstName">Prénom</label>
+          <input type="text" id="modalFirstName" placeholder="Votre prénom" required />
         </div>
         <div class="form-group">
-          <label for="registerEmail">Email</label>
-          <input type="email" id="registerEmail" placeholder="Votre Email" required>
+          <label for="modalRegisterEmail">Email</label>
+          <input type="email" id="modalRegisterEmail" placeholder="Votre Email" required>
         </div>
         <div class="form-group">
-          <label for="phone">Téléphone</label>
-          <input type="text" id="phone" placeholder="Votre téléphone (Ex: +228 XX XX XX XX)" required />
+          <label for="modalPhone">Téléphone</label>
+          <input type="text" id="modalPhone" placeholder="Votre téléphone (Ex: +228 XX XX XX XX)" required />
         </div>
         <div class="form-group">
-          <label for="registerPassword">Mot de passe</label>
-          <input type="password" id="registerPassword" required>
+          <label for="modalRegisterPassword">Mot de passe</label>
+          <input type="password" id="modalRegisterPassword" required>
         </div>
         <div class="form-group">
-          <label for="confirmPassword">Confirmer le mot de passe</label>
-          <input type="password" id="confirmPassword" required>
+          <label for="modalConfirmPassword">Confirmer le mot de passe</label>
+          <input type="password" id="modalConfirmPassword" required>
         </div>
-        <div id="loginMessage" style="color: red; margin-bottom: 10px;"></div>
+        
         <button type="submit" class="btn btn-primary" style="width: 100%;">
           S'inscrire
         </button>
       </form>
+      
+      <div id="modalRegisterMessage" class="form-message"></div>
       
       <div class="form-toggle">
         <p>Déjà inscrit ? <a href="#" onclick="switchModal('register', 'login')">Se connecter</a></p>
@@ -352,7 +356,7 @@
   </div>
 
   <script type="module" src="firebase-config.js"></script>
-  <script src="js/auth.js"></script>
+  <script type="module" src="js/auth.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
