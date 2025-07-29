@@ -122,13 +122,13 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Formulaire d'inscription
-  const registerForm = document.getElementById('registerForm');
-  if (registerForm) {
-    registerForm.addEventListener('submit', async (e) => {
+  const signupForm = document.getElementById('signupForm');
+  if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const email = document.getElementById('registerEmail').value.trim();
-      const password = document.getElementById('registerPassword').value;
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
       
       // Validations
