@@ -50,6 +50,14 @@ window.masquerForms = masquerForms;
 
 // Attendre que le DOM soit chargé
 document.addEventListener('DOMContentLoaded', function() {
+  // Redirection vers inscription.htm depuis le bouton "Inscription" sur login.htm
+  const goToInscriptionBtn = document.getElementById('goToInscription');
+  if (goToInscriptionBtn) {
+    goToInscriptionBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'inscription.htm';
+    });
+  }
   
   // Formulaire de connexion
   const loginForm = document.getElementById('loginForm');
@@ -122,47 +130,35 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Formulaire d'inscription
+  // Formulaire d'inscription sur login.htm
   const registerForm = document.getElementById('registerForm');
   if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
       const email = document.getElementById('registerEmail').value.trim();
       const password = document.getElementById('registerPassword').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
-      
-      // Validations
       if (!email || !password || !confirmPassword) {
         showMessage('Veuillez remplir tous les champs', 'error');
         return;
       }
-      
       if (password !== confirmPassword) {
         showMessage('Les mots de passe ne correspondent pas', 'error');
         return;
       }
-      
       if (password.length < 6) {
         showMessage('Le mot de passe doit contenir au moins 6 caractères', 'error');
         return;
       }
-      
       const submitBtn = registerForm.querySelector('button[type="submit"]');
       const originalText = submitBtn.textContent;
       submitBtn.textContent = '⏳ Inscription...';
       submitBtn.disabled = true;
-      
       try {
         showMessage('Création du compte en cours...', 'info');
-        
-        // Créer le compte Firebase
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        
-        // Générer un ID utilisateur
         const randomId = 'HD' + Math.floor(100 + Math.random() * 900);
-        
-        // Sauvegarder les données utilisateur dans Firestore
         await setDoc(doc(db, 'users', user.uid), {
           email: email,
           fullName: 'Nouvel utilisateur',
@@ -171,18 +167,13 @@ document.addEventListener('DOMContentLoaded', function() {
           identifiant: randomId,
           createdAt: new Date().toISOString()
         });
-        
         showMessage(`Compte créé avec succès! Votre ID client: ${randomId}. Vous pouvez maintenant vous connecter.`, 'success');
-        
-        // Réinitialiser le formulaire et revenir à la connexion
         registerForm.reset();
         setTimeout(() => {
           masquerForms();
         }, 3000);
-        
       } catch (error) {
         console.error('Erreur inscription:', error);
-        
         let errorMessage = 'Erreur lors de l\'inscription: ';
         switch(error.code) {
           case 'auth/email-already-in-use':
@@ -200,9 +191,82 @@ document.addEventListener('DOMContentLoaded', function() {
           default:
             errorMessage += error.message;
         }
-        
         showMessage(errorMessage, 'error');
-        
+      } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+  }
+
+  // Formulaire d'inscription sur inscription.htm
+  const signupForm = document.getElementById('signupForm');
+  if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fullName = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      if (!fullName || !phone || !address || !email || !password || !confirmPassword) {
+        document.getElementById('signupMessage').textContent = 'Veuillez remplir tous les champs';
+        document.getElementById('signupMessage').style.color = '#ef4444';
+        return;
+      }
+      if (password !== confirmPassword) {
+        document.getElementById('signupMessage').textContent = 'Les mots de passe ne correspondent pas';
+        document.getElementById('signupMessage').style.color = '#ef4444';
+        return;
+      }
+      if (password.length < 6) {
+        document.getElementById('signupMessage').textContent = 'Le mot de passe doit contenir au moins 6 caractères';
+        document.getElementById('signupMessage').style.color = '#ef4444';
+        return;
+      }
+      const submitBtn = signupForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = '⏳ Inscription...';
+      submitBtn.disabled = true;
+      try {
+        document.getElementById('signupMessage').textContent = 'Création du compte en cours...';
+        document.getElementById('signupMessage').style.color = '#3b82f6';
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        const randomId = 'HD' + Math.floor(100 + Math.random() * 900);
+        await setDoc(doc(db, 'users', user.uid), {
+          email: email,
+          fullName: fullName,
+          phone: phone,
+          address: address,
+          identifiant: randomId,
+          createdAt: new Date().toISOString()
+        });
+        document.getElementById('signupMessage').textContent = `Compte créé avec succès! Votre ID client: ${randomId}. Vous pouvez maintenant vous connecter.`;
+        document.getElementById('signupMessage').style.color = '#10b981';
+        signupForm.reset();
+      } catch (error) {
+        console.error('Erreur inscription:', error);
+        let errorMessage = 'Erreur lors de l\'inscription: ';
+        switch(error.code) {
+          case 'auth/email-already-in-use':
+            errorMessage += 'Cette adresse email est déjà utilisée';
+            break;
+          case 'auth/invalid-email':
+            errorMessage += 'Adresse email invalide';
+            break;
+          case 'auth/weak-password':
+            errorMessage += 'Le mot de passe est trop faible';
+            break;
+          case 'auth/operation-not-allowed':
+            errorMessage += 'Inscription désactivée. Contactez l\'administrateur.';
+            break;
+          default:
+            errorMessage += error.message;
+        }
+        document.getElementById('signupMessage').textContent = errorMessage;
+        document.getElementById('signupMessage').style.color = '#ef4444';
       } finally {
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
