@@ -1,7 +1,7 @@
 // js/login-page.js
 import { auth, db } from '../firebase-config.js';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-import { collection, doc, setDoc } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+import { collection, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
 // Fonction pour afficher des messages
 function showMessage(message, type = 'info') {
@@ -91,9 +91,25 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'admin-dashboard.htm';
           }, 1500);
         } else {
-          setTimeout(() => {
-            window.location.href = 'user-dashboard.htm';
-          }, 1500);
+          // Vérifier dans Firestore si l'utilisateur a le rôle admin
+          try {
+            const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+            if (userDoc.exists() && (userDoc.data().role === 'admin' || userDoc.data().isAdmin === true)) {
+              setTimeout(() => {
+                window.location.href = 'admin-dashboard.htm';
+              }, 1500);
+            } else {
+              setTimeout(() => {
+                window.location.href = 'user-dashboard.htm';
+              }, 1500);
+            }
+          } catch (error) {
+            console.error('Erreur vérification rôle:', error);
+            // En cas d'erreur, rediriger vers le dashboard utilisateur par défaut
+            setTimeout(() => {
+              window.location.href = 'user-dashboard.htm';
+            }, 1500);
+          }
         }
         
       } catch (error) {
@@ -331,13 +347,25 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Vérifier si l'utilisateur est déjà connecté
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(async (user) => {
   if (user) {
     // L'utilisateur est déjà connecté, le rediriger
     if (user.email === 'bernardalade92@gmail.com') {
       window.location.href = 'admin-dashboard.htm';
     } else {
-      window.location.href = 'user-dashboard.htm';
+      // Vérifier dans Firestore si l'utilisateur a le rôle admin
+      try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists() && (userDoc.data().role === 'admin' || userDoc.data().isAdmin === true)) {
+          window.location.href = 'admin-dashboard.htm';
+        } else {
+          window.location.href = 'user-dashboard.htm';
+        }
+      } catch (error) {
+        console.error('Erreur vérification rôle:', error);
+        // En cas d'erreur, rediriger vers le dashboard utilisateur par défaut
+        window.location.href = 'user-dashboard.htm';
+      }
     }
   }
 });

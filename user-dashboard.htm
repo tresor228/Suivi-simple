@@ -12,7 +12,9 @@
       <h1>✨ Mon Espace Colis</h1>
       <div class="user-badge" id="userBadge">
         <span>utilisateur@example.com</span>
-        <img src="https://i.imgur.com/8Km9tLL.png" alt="Photo profil" class="user-avatar">
+        <div class="user-avatar" id="userAvatar">
+          <span id="userInitials">U</span>
+        </div>
       </div>
     </header>
     
@@ -86,11 +88,53 @@
       
       <div class="profile-content">
         <div class="personal-info">
-          <h3>📝 Informations Personnelles</h3>
-          <div id="personalInfo" class="info-grid">
+          <div class="profile-header-row">
+            <h3>📝 Informations Personnelles</h3>
+            <button id="editProfileBtn" class="edit-btn">✏️ Modifier</button>
+          </div>
+          
+          <!-- Mode Affichage -->
+          <div id="profileDisplay" class="info-grid">
             <div class="empty-message">
               <p>Informations de profil en cours de chargement...</p>
             </div>
+          </div>
+          
+          <!-- Mode Édition -->
+          <div id="profileEdit" class="profile-edit-form" style="display: none;">
+            <form id="editProfileForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="editLastName">Nom</label>
+                  <input type="text" id="editLastName" placeholder="Votre nom">
+                </div>
+                <div class="form-group">
+                  <label for="editFirstName">Prénom</label>
+                  <input type="text" id="editFirstName" placeholder="Votre prénom">
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="editPhone">Téléphone</label>
+                  <input type="tel" id="editPhone" placeholder="Votre numéro de téléphone">
+                </div>
+                <div class="form-group">
+                  <label for="editEmail">Adresse email</label>
+                  <input type="email" id="editEmail" placeholder="Votre adresse email" readonly>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="editAddress">Adresse</label>
+                <textarea id="editAddress" placeholder="Votre adresse complète" rows="3"></textarea>
+              </div>
+              
+              <div class="form-actions">
+                <button type="submit" class="save-btn">💾 Sauvegarder</button>
+                <button type="button" class="cancel-btn" onclick="cancelEdit()">❌ Annuler</button>
+              </div>
+            </form>
           </div>
         </div>
         
@@ -127,8 +171,7 @@
       </div>
     </section>
   </div>
-  <script src = "js/auth.js"></script>
   <script type="module" src="firebase-config.js"></script>
-  <script src = "js/user.js"></script>
+  <script type="module" src="js/user.js"></script>
 </body>
 </html>

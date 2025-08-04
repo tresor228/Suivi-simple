@@ -1,6 +1,6 @@
 import { auth, db } from '../firebase-config.js';
 import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+import { doc, getDoc, updateDoc, enableNetwork } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
 // Variables globales
 let currentUser = null;
@@ -28,7 +28,8 @@ async function loadUserProfile(uid) {
       // Données par défaut si pas de profil en DB
       userProfileData = {
         email: currentUser.email,
-        fullName: 'Utilisateur',
+        lastName: '',
+        firstName: '',
         phone: 'Non renseigné',
         address: 'Non renseigné',
         identifiant: 'HD' + Math.floor(100 + Math.random() * 900),
@@ -40,7 +41,8 @@ async function loadUserProfile(uid) {
     // Données par défaut en cas d'erreur
     userProfileData = {
       email: currentUser.email,
-      fullName: 'Utilisateur',
+      lastName: '',
+      firstName: '',
       phone: 'Non renseigné',
       address: 'Non renseigné',
       identifiant: 'HD' + Math.floor(100 + Math.random() * 900),
@@ -58,20 +60,69 @@ function updateUserDisplay() {
     if (emailSpan) {
       emailSpan.textContent = userProfileData.email;
     }
+    
+    // Mettre à jour les initiales
+    updateUserInitials();
   }
   
   // Mettre à jour les informations du profil
   updateProfileInfo();
 }
 
+// Mettre à jour les initiales de l'utilisateur
+function updateUserInitials() {
+  const initialsSpan = document.getElementById('userInitials');
+  if (initialsSpan && userProfileData) {
+    let initials = 'U'; // Par défaut
+    
+    // Utiliser lastName et firstName en priorité
+    if (userProfileData.lastName && userProfileData.firstName) {
+      initials = (userProfileData.lastName.charAt(0) + userProfileData.firstName.charAt(0)).toUpperCase();
+    } else if (userProfileData.lastName) {
+      initials = userProfileData.lastName.charAt(0).toUpperCase();
+    } else if (userProfileData.firstName) {
+      initials = userProfileData.firstName.charAt(0).toUpperCase();
+    } else if (userProfileData.fullName && userProfileData.fullName !== 'Utilisateur') {
+      // Fallback pour l'ancien format
+      const names = userProfileData.fullName.split(' ');
+      if (names.length >= 2) {
+        initials = (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+      } else if (names.length === 1) {
+        initials = names[0].charAt(0).toUpperCase();
+      }
+    } else if (userProfileData.email) {
+      // Utiliser la première lettre de l'email si pas de nom
+      initials = userProfileData.email.charAt(0).toUpperCase();
+    }
+    
+    initialsSpan.textContent = initials;
+  }
+}
+
 // Mettre à jour les informations du profil
 function updateProfileInfo() {
-  const personalInfoDiv = document.getElementById('personalInfo');
-  if (personalInfoDiv && userProfileData) {
-    personalInfoDiv.innerHTML = `
+  const profileDisplayDiv = document.getElementById('profileDisplay');
+  if (profileDisplayDiv && userProfileData) {
+    // Construire le nom complet à partir de lastName et firstName
+    let fullName = '';
+    if (userProfileData.lastName && userProfileData.firstName) {
+      fullName = `${userProfileData.lastName} ${userProfileData.firstName}`;
+    } else if (userProfileData.lastName) {
+      fullName = userProfileData.lastName;
+    } else if (userProfileData.firstName) {
+      fullName = userProfileData.firstName;
+    } else if (userProfileData.fullName) {
+      fullName = userProfileData.fullName; // Fallback pour l'ancien format
+    }
+    
+    profileDisplayDiv.innerHTML = `
       <div class="info-card">
-        <label>Nom Complet</label>
-        <p>${userProfileData.fullName || 'Non renseigné'}</p>
+        <label>Nom</label>
+        <p>${userProfileData.lastName || 'Non renseigné'}</p>
+      </div>
+      <div class="info-card">
+        <label>Prénom</label>
+        <p>${userProfileData.firstName || 'Non renseigné'}</p>
       </div>
       <div class="info-card">
         <label>Email</label>
@@ -80,10 +131,6 @@ function updateProfileInfo() {
       <div class="info-card">
         <label>Téléphone</label>
         <p>${userProfileData.phone || 'Non renseigné'}</p>
-      </div>
-      <div class="info-card">
-        <label>Adresse</label>
-        <p>${userProfileData.address || 'Non renseigné'}</p>
       </div>
       <div class="info-card">
         <label>ID Client</label>
@@ -96,7 +143,7 @@ function updateProfileInfo() {
     `;
     
     // Animation d'apparition des cartes
-    const cards = personalInfoDiv.querySelectorAll('.info-card');
+    const cards = profileDisplayDiv.querySelectorAll('.info-card');
     cards.forEach((card, index) => {
       card.style.opacity = '0';
       card.style.transform = 'translateY(20px)';
@@ -129,15 +176,219 @@ function deconnexion() {
 // Rendre la fonction globale
 window.deconnexion = deconnexion;
 
+// Fonctions pour l'édition du profil
+function startEditProfile() {
+  const profileDisplay = document.getElementById('profileDisplay');
+  const profileEdit = document.getElementById('profileEdit');
+  const editBtn = document.getElementById('editProfileBtn');
+  
+  if (profileDisplay && profileEdit && editBtn) {
+    // Remplir le formulaire avec les données actuelles
+    document.getElementById('editLastName').value = userProfileData.lastName || '';
+    document.getElementById('editFirstName').value = userProfileData.firstName || '';
+    document.getElementById('editPhone').value = userProfileData.phone || '';
+    document.getElementById('editEmail').value = userProfileData.email || '';
+    
+    // Basculer vers le mode édition
+    profileDisplay.style.display = 'none';
+    profileEdit.style.display = 'block';
+    editBtn.textContent = '👁️ Voir';
+    editBtn.onclick = stopEditProfile;
+  }
+}
+
+function stopEditProfile() {
+  const profileDisplay = document.getElementById('profileDisplay');
+  const profileEdit = document.getElementById('profileEdit');
+  const editBtn = document.getElementById('editProfileBtn');
+  
+  if (profileDisplay && profileEdit && editBtn) {
+    // Basculer vers le mode affichage
+    profileDisplay.style.display = 'block';
+    profileEdit.style.display = 'none';
+    editBtn.textContent = '✏️ Modifier';
+    editBtn.onclick = startEditProfile;
+  }
+}
+
+function cancelEdit() {
+  stopEditProfile();
+}
+
+// Test de connexion Firestore
+async function testFirestoreConnection() {
+  try {
+    await enableNetwork(db);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Test simple de lecture
+    const testRef = doc(db, 'test', 'connection-test');
+    await getDoc(testRef);
+    return true;
+  } catch (error) {
+    console.error('Test de connexion échoué:', error);
+    return false;
+  }
+}
+
+// Sauvegarder les modifications du profil
+async function saveProfileChanges(formData) {
+  try {
+    console.log('Début de la sauvegarde du profil...');
+    console.log('Données à sauvegarder:', formData);
+    console.log('Utilisateur actuel:', currentUser);
+    
+    // Validation des données
+    if (!formData.lastName && !formData.firstName) {
+      showNotification('❌ Veuillez remplir au moins le nom ou le prénom', 'error');
+      return false;
+    }
+    
+    // Vérifier que l'utilisateur est connecté
+    if (!currentUser || !currentUser.uid) {
+      console.error('Utilisateur non connecté');
+      showNotification('❌ Erreur: Utilisateur non connecté', 'error');
+      return false;
+    }
+    
+    const userRef = doc(db, 'users', currentUser.uid);
+    console.log('Référence du document:', userRef);
+    
+    const updateData = {
+      lastName: formData.lastName,
+      firstName: formData.firstName,
+      phone: formData.phone,
+      updatedAt: new Date().toISOString()
+    };
+    
+    console.log('Données à mettre à jour:', updateData);
+    
+    // Forcer la connexion réseau et attendre
+    await enableNetwork(db);
+    
+    // Attendre un peu pour que la connexion s'établisse
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Essayer la mise à jour avec retry
+    let retryCount = 0;
+    const maxRetries = 3;
+    
+    while (retryCount < maxRetries) {
+      try {
+        await updateDoc(userRef, updateData);
+        console.log('Document mis à jour avec succès dans Firebase');
+        break;
+      } catch (error) {
+        retryCount++;
+        console.log(`Tentative ${retryCount}/${maxRetries} échouée: ${error.message}`);
+        
+        if (retryCount >= maxRetries) {
+          throw error;
+        }
+        
+        // Attendre avant la prochaine tentative
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    }
+    
+    // Mettre à jour les données locales
+    userProfileData = { ...userProfileData, ...formData };
+    console.log('Données locales mises à jour:', userProfileData);
+    
+    // Mettre à jour l'affichage
+    updateProfileInfo();
+    updateUserInitials();
+    
+    showNotification('✅ Profil mis à jour avec succès !', 'success');
+    return true;
+  } catch (error) {
+    console.error('Erreur détaillée lors de la mise à jour du profil:', error);
+    console.error('Code d\'erreur:', error.code);
+    console.error('Message d\'erreur:', error.message);
+    
+    // Si Firestore est offline, sauvegarder localement
+    if (error.code === 'unavailable' || error.message.includes('offline')) {
+      console.log('Firestore offline, sauvegarde locale...');
+      
+      // Sauvegarder dans localStorage
+      const localData = {
+        ...userProfileData,
+        ...formData,
+        lastUpdated: new Date().toISOString(),
+        pendingSync: true
+      };
+      
+      localStorage.setItem('userProfilePending', JSON.stringify(localData));
+      
+      // Mettre à jour l'affichage localement
+      userProfileData = { ...userProfileData, ...formData };
+      updateProfileInfo();
+      updateUserInitials();
+      
+      showNotification('⚠️ Sauvegardé localement (Firestore offline). Synchronisation automatique lors de la reconnexion.', 'warning');
+      return true;
+    } else {
+      showNotification(`❌ Erreur lors de la mise à jour du profil: ${error.message}`, 'error');
+      return false;
+    }
+  }
+}
+
 // Initialisation
 document.addEventListener('DOMContentLoaded', function() {
   initNavigation();
   initImageUploads();
   initPackageForm();
+  initProfileEdit();
   
   // Afficher la première section par défaut
   showSection('mesColis');
 });
+
+function initProfileEdit() {
+  // Initialiser le bouton d'édition
+  const editBtn = document.getElementById('editProfileBtn');
+  if (editBtn) {
+    editBtn.addEventListener('click', startEditProfile);
+  }
+  
+  // Initialiser le formulaire d'édition
+  const editForm = document.getElementById('editProfileForm');
+  if (editForm) {
+    editForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = editForm.querySelector('.save-btn');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = '⏳ Sauvegarde...';
+      submitBtn.disabled = true;
+      
+      try {
+        const formData = {
+          lastName: document.getElementById('editLastName').value.trim(),
+          firstName: document.getElementById('editFirstName').value.trim(),
+          phone: document.getElementById('editPhone').value.trim()
+        };
+        
+        const success = await saveProfileChanges(formData);
+        
+        if (success) {
+          // Attendre un peu pour que l'utilisateur voie la notification
+          setTimeout(() => {
+            stopEditProfile();
+          }, 1000);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la sauvegarde:', error);
+        showNotification('❌ Erreur lors de la sauvegarde', 'error');
+      } finally {
+        // S'assurer que le bouton se remet toujours
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+  }
+}
 
 function initNavigation() {
   const navButtons = document.querySelectorAll('.nav-btn');
@@ -341,6 +592,9 @@ function afficherHistorique() {
 
 // Rendre les fonctions globales
 window.afficherHistorique = afficherHistorique;
+window.startEditProfile = startEditProfile;
+window.stopEditProfile = stopEditProfile;
+window.cancelEdit = cancelEdit;
 
 // Notifications de bienvenue
 setTimeout(() => {
