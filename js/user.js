@@ -292,6 +292,11 @@ async function saveProfileChanges(formData) {
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', function() {
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', deconnexion);
+  }
+  
   initNavigation();
   initImageUploads();
   initPackageForm();

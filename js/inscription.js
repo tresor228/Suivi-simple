@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
       
-      const submitBtn = registerForm.querySelector('button[type="submit"]');
+      const submitBtn = signupForm.querySelector('button[type="submit"]');
       const originalText = submitBtn.textContent;
       submitBtn.textContent = '⏳ Inscription...';
       submitBtn.disabled = true;
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showMessage(`Compte créé avec succès! Votre ID client: ${randomId}. Vous pouvez maintenant vous connecter.`, 'success');
         
         // Réinitialiser le formulaire et revenir à la connexion
-        registerForm.reset();
+        signupForm.reset();
         setTimeout(() => {
           masquerForms();
         }, 3000);

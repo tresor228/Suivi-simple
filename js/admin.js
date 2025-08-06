@@ -1,66 +1,12 @@
-// Configuration Firebase simulée (remplacez par votre vraie config)
-    const firebaseConfig = {
-      // Votre configuration Firebase ici
-    };
+import { auth, db, storage } from '../firebase-config.js';
+import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+import { ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js';
+import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
 
-    // Simulation des données pour la démo
-    let allPackages = [
-      {
-        id: 'TRK001234567',
-        trackingNumber: 'TRK001234567',
-        recipientName: 'Jean Dupont',
-        recipientPhone: '+228 90 12 34 56',
-        transportType: 'aérien',
-        status: 'en_attente',
-        imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
-        notes: 'Colis fragile - manipuler avec précaution',
-        createdAt: new Date('2024-01-15'),
-        lastUpdated: new Date('2024-01-15')
-      },
-      {
-        id: 'TRK987654321',
-        trackingNumber: 'TRK987654321',
-        recipientName: 'Marie Martin',
-        recipientPhone: '+228 91 23 45 67',
-        transportType: 'maritime',
-        status: 'en_livraison',
-        imageUrl: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400',
-        notes: 'Livraison express demandée',
-        createdAt: new Date('2024-01-10'),
-        deliveryStart: new Date('2024-01-12'),
-        lastUpdated: new Date('2024-01-12')
-      },
-      {
-        id: 'TRK555666777',
-        trackingNumber: 'TRK555666777',
-        recipientName: 'Pierre Kofi',
-        recipientPhone: '+228 92 34 56 78',
-        transportType: 'aérien',
-        status: 'livre',
-        imageUrl: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400',
-        notes: null,
-        createdAt: new Date('2024-01-05'),
-        deliveryStart: new Date('2024-01-07'),
-        deliveredAt: new Date('2024-01-14'),
-        lastUpdated: new Date('2024-01-14')
-      }
-    ];
-
-    let allHistory = [
-      {
-        id: 'TRK111222333',
-        trackingNumber: 'TRK111222333',
-        recipientName: 'Ama Koko',
-        recipientPhone: '+228 93 45 67 89',
-        transportType: 'maritime',
-        status: 'livre',
-        imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400',
-        archivedAt: new Date('2024-01-01'),
-        deliveredAt: new Date('2023-12-28')
-      }
-    ];
-
-    let selectedPackages = new Set();
+// Variables globales
+let allPackages = [];
+let allHistory = [];
+let selectedPackages = new Set();
 
     // Initialisation
     document.addEventListener('DOMContentLoaded', function() {

@@ -1,23 +1,31 @@
 import { auth, db } from '../firebase-config.js';
+import { collection, query, orderBy, where, getDocs, doc, setDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
 
 let listeComplete = [];
 
 async function chargerHistorique() {
-  const snapshot = await db
-    .collection("historique_colis")
-    .orderBy("archivedAt", "desc")
-    .get();
+  try {
+    const q = query(
+      collection(db, "historique_colis"),
+      orderBy("archivedAt", "desc")
+    );
+    
+    const snapshot = await getDocs(q);
+    const container = document.getElementById("historiqueList");
+    container.innerHTML = "";
+    listeComplete = [];
 
-  const container = document.getElementById("historiqueList");
-  container.innerHTML = "";
-  listeComplete = [];
+    snapshot.forEach(docSnapshot => {
+      const data = docSnapshot.data();
+      listeComplete.push({ id: docSnapshot.id, ...data });
+    });
 
-  snapshot.forEach(doc => {
-    const data = doc.data();
-    listeComplete.push({ id: doc.id, ...data });
-  });
-
-  afficherHistorique(listeComplete);
+    afficherHistorique(listeComplete);
+  } catch (error) {
+    console.error('Erreur chargement historique:', error);
+    document.getElementById("historiqueList").innerHTML = '<p>Erreur lors du chargement</p>';
+  }
 }
 
 function afficherHistorique(colisList) {
@@ -46,48 +54,58 @@ function filtrerHistorique() {
 }
 
 window.onload = async function() {
-  auth.onAuthStateChanged(async function(user) {
+  onAuthStateChanged(auth, async function(user) {
     if (user) {
-      // Utilisateur connecté, on charge ses colis historiques
-      const userId = user.uid;
-      const snapshot = await db
-        .collection("historique_colis")
-        .where("userUid", "==", userId)
-        .orderBy("archivedAt", "desc")
-        .get();
-      listeComplete = [];
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        listeComplete.push({ id: doc.id, ...data });
-      });
-      afficherHistorique(listeComplete);
+      try {
+        const userId = user.uid;
+        const q = query(
+          collection(db, "historique_colis"),
+          where("userUid", "==", userId),
+          orderBy("archivedAt", "desc")
+        );
+        
+        const snapshot = await getDocs(q);
+        listeComplete = [];
+        
+        snapshot.forEach(docSnapshot => {
+          const data = docSnapshot.data();
+          listeComplete.push({ id: docSnapshot.id, ...data });
+        });
+        
+        afficherHistorique(listeComplete);
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
     } else {
-      // Redirige vers la page de connexion si non connecté
       window.location.href = "login.htm";
     }
   });
 };
 
 document.getElementById('logoutBtn')?.addEventListener('click', function() {
-  auth.signOut().then(() => {
+  signOut(auth).then(() => {
     window.location.href = 'login.htm';
   });
 });
 
 async function archiverColis(id, data) {
-    const confirmation = confirm("Archiver ce colis ? Il sera déplacé dans l'historique.");
-    if (!confirmation) return;
-  
-    try {
-      await db.collection("historique_colis").doc(id).set({
-        ...data,
-        archivedAt: new Date().toISOString()
-      });
-  
-      await db.collection("colis").doc(id).delete();
-      alert("✅ Colis archivé !");
-      afficherListeColis();
-    } catch (error) {
-      alert("Erreur lors de l'archivage : " + error.message);
-    }
+  const confirmation = confirm("Archiver ce colis ? Il sera déplacé dans l'historique.");
+  if (!confirmation) return;
+
+  try {
+    await setDoc(doc(db, "historique_colis", id), {
+      ...data,
+      archivedAt: new Date().toISOString()
+    });
+
+    await deleteDoc(doc(db, "colis", id));
+    alert("✅ Colis archivé !");
+    afficherListeColis();
+  } catch (error) {
+    alert("Erreur lors de l'archivage : " + error.message);
   }
+}
+
+// Rendre les fonctions globales
+window.filtrerHistorique = filtrerHistorique;
+window.archiverColis = archiverColis;
