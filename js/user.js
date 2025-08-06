@@ -30,8 +30,8 @@ async function loadUserProfile(uid) {
         email: currentUser.email,
         lastName: '',
         firstName: '',
-        phone: 'Non renseigné',
-        address: 'Non renseigné',
+        phone: '',
+        address: '',
         identifiant: 'HD' + Math.floor(100 + Math.random() * 900),
         createdAt: new Date().toISOString()
       };
@@ -43,8 +43,8 @@ async function loadUserProfile(uid) {
       email: currentUser.email,
       lastName: '',
       firstName: '',
-      phone: 'Non renseigné',
-      address: 'Non renseigné',
+      phone: '',
+      address: '',
       identifiant: 'HD' + Math.floor(100 + Math.random() * 900),
       createdAt: new Date().toISOString()
     };
@@ -82,7 +82,7 @@ function updateUserInitials() {
       initials = userProfileData.lastName.charAt(0).toUpperCase();
     } else if (userProfileData.firstName) {
       initials = userProfileData.firstName.charAt(0).toUpperCase();
-    } else if (userProfileData.fullName && userProfileData.fullName !== 'Utilisateur') {
+    } else if (userProfileData.fullName && userProfileData.fullName !== 'Nouvel utilisateur') {
       // Fallback pour l'ancien format
       const names = userProfileData.fullName.split(' ');
       if (names.length >= 2) {
@@ -103,18 +103,6 @@ function updateUserInitials() {
 function updateProfileInfo() {
   const profileDisplayDiv = document.getElementById('profileDisplay');
   if (profileDisplayDiv && userProfileData) {
-    // Construire le nom complet à partir de lastName et firstName
-    let fullName = '';
-    if (userProfileData.lastName && userProfileData.firstName) {
-      fullName = `${userProfileData.lastName} ${userProfileData.firstName}`;
-    } else if (userProfileData.lastName) {
-      fullName = userProfileData.lastName;
-    } else if (userProfileData.firstName) {
-      fullName = userProfileData.firstName;
-    } else if (userProfileData.fullName) {
-      fullName = userProfileData.fullName; // Fallback pour l'ancien format
-    }
-    
     profileDisplayDiv.innerHTML = `
       <div class="info-card">
         <label>Nom</label>
@@ -188,6 +176,7 @@ function startEditProfile() {
     document.getElementById('editFirstName').value = userProfileData.firstName || '';
     document.getElementById('editPhone').value = userProfileData.phone || '';
     document.getElementById('editEmail').value = userProfileData.email || '';
+    document.getElementById('editAddress').value = userProfileData.address || '';
     
     // Basculer vers le mode édition
     profileDisplay.style.display = 'none';
@@ -215,28 +204,10 @@ function cancelEdit() {
   stopEditProfile();
 }
 
-// Test de connexion Firestore
-async function testFirestoreConnection() {
-  try {
-    await enableNetwork(db);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Test simple de lecture
-    const testRef = doc(db, 'test', 'connection-test');
-    await getDoc(testRef);
-    return true;
-  } catch (error) {
-    console.error('Test de connexion échoué:', error);
-    return false;
-  }
-}
-
 // Sauvegarder les modifications du profil
 async function saveProfileChanges(formData) {
   try {
     console.log('Début de la sauvegarde du profil...');
-    console.log('Données à sauvegarder:', formData);
-    console.log('Utilisateur actuel:', currentUser);
     
     // Validation des données
     if (!formData.lastName && !formData.firstName) {
@@ -252,16 +223,14 @@ async function saveProfileChanges(formData) {
     }
     
     const userRef = doc(db, 'users', currentUser.uid);
-    console.log('Référence du document:', userRef);
     
     const updateData = {
       lastName: formData.lastName,
       firstName: formData.firstName,
       phone: formData.phone,
+      address: formData.address || '',
       updatedAt: new Date().toISOString()
     };
-    
-    console.log('Données à mettre à jour:', updateData);
     
     // Forcer la connexion réseau et attendre
     await enableNetwork(db);
@@ -292,8 +261,7 @@ async function saveProfileChanges(formData) {
     }
     
     // Mettre à jour les données locales
-    userProfileData = { ...userProfileData, ...formData };
-    console.log('Données locales mises à jour:', userProfileData);
+    userProfileData = { ...userProfileData, ...updateData };
     
     // Mettre à jour l'affichage
     updateProfileInfo();
@@ -303,22 +271,10 @@ async function saveProfileChanges(formData) {
     return true;
   } catch (error) {
     console.error('Erreur détaillée lors de la mise à jour du profil:', error);
-    console.error('Code d\'erreur:', error.code);
-    console.error('Message d\'erreur:', error.message);
     
     // Si Firestore est offline, sauvegarder localement
     if (error.code === 'unavailable' || error.message.includes('offline')) {
       console.log('Firestore offline, sauvegarde locale...');
-      
-      // Sauvegarder dans localStorage
-      const localData = {
-        ...userProfileData,
-        ...formData,
-        lastUpdated: new Date().toISOString(),
-        pendingSync: true
-      };
-      
-      localStorage.setItem('userProfilePending', JSON.stringify(localData));
       
       // Mettre à jour l'affichage localement
       userProfileData = { ...userProfileData, ...formData };
@@ -367,7 +323,8 @@ function initProfileEdit() {
         const formData = {
           lastName: document.getElementById('editLastName').value.trim(),
           firstName: document.getElementById('editFirstName').value.trim(),
-          phone: document.getElementById('editPhone').value.trim()
+          phone: document.getElementById('editPhone').value.trim(),
+          address: document.getElementById('editAddress').value.trim()
         };
         
         const success = await saveProfileChanges(formData);
@@ -618,7 +575,7 @@ function showNotification(message, type = 'info') {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+    background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
     color: white;
     padding: 16px 24px;
     border-radius: 12px;
